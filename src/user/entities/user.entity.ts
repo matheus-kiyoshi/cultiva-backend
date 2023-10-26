@@ -1,21 +1,24 @@
-import { Prisma } from "@prisma/client";
-
-type create<T> = {
-	
-}
+type create<T> = {}
 
 export class User {
 	id?: string;
 	name: string;
 	email: string;
 	password?: string;
-	telephone?: create<Telephone>;
+	telephone?: string | null;
 	address?: create<Address>;
 	rating: number[];
 	createdAt: Date;
 	producer?: create<Producer>;
 	client?: create<Client>;
 	comments?: create<Comment[]>;
+}
+
+export class EditableUserInformations {
+	name: string;
+	email: string;
+	telephone: String;
+	address: create<Address>;
 }
 
 export class Producer extends User {
@@ -31,13 +34,6 @@ export class Client extends User {
 	favorites: Product[];
 	purchases: Buy[];
 	commentsOnProducts: Comment[];
-}
-
-export class Telephone {
-	id: string;
-	ddd: string;
-	number: string;
-	type: string;
 }
 
 export class Address {

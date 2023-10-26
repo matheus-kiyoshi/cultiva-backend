@@ -19,6 +19,8 @@ export class AuthService {
       sub: user.id ? user.id : '',
       email: user.email,
       name: user.name,
+			rating: user.rating,
+			createdAt: user.createdAt,
     };
 
     return {

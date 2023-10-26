@@ -3,6 +3,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+	Get,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -21,5 +22,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Request() req: AuthRequest) {
     return this.authService.login(req.user);
+  }
+
+  @Get('profile')
+  @HttpCode(HttpStatus.OK)
+  getProfile(@Request() req: AuthRequest) {
+    return req.user;
   }
 }
