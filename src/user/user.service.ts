@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -18,22 +18,41 @@ export class UserService {
 
     const createdUser = await this.prisma.user.create({ data });
 
+    if (!createdUser) {
+      throw new HttpException('Error creating user', 500);
+    }
+
     return {
       ...createdUser,
       password: undefined,
     };
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll() {
+    const users = await this.prisma.user.findMany();
+    if (!users) {
+      throw new HttpException('Error finding users', 500);
+    }
+
+    return users;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findById(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return user;
   }
 
-  findByEmail(email: string) {
-    return this.prisma.user.findUnique({ where: { email } });
+  async findByEmail(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

@@ -6,37 +6,37 @@ WORK IN PROGRESS
 
 # USER 
 
-  - `/register` (POST) => Create user
+  - `/user` (POST) => Create user
     - TODO
   - `/login` (POST) => Sign-in user
     - TODO
-  - `/users` (GET) => Get all users
+  - `/user` (GET) => Get all users
     - TODO
-  - `/users/:username` (GET) => Get User Public Data
+  - `/user/:username` (GET) => Get User Public Data
     - TODO
-  - `/users/:username/password` (PATCH) => (need jwt) Update user password
+  - `/user/:username/password` (PATCH) => (need jwt) Update user password
     - TODO
-  - `/users/:username/resetpassword` (PATCH) => (email verify) reset user password
+  - `/user/:username/resetpassword` (PATCH) => (email verify) reset user password
     - TODO
-  - `/users/:username/profile` (PATCH) => (need jwt) Update user data
+  - `/user/:username/profile` (PATCH) => (need jwt) Update user data
     - TODO
-  - `/users/:username` (DELETE) => (need jwt) Delete user
+  - `/user/:username` (DELETE) => (need jwt) Delete user
     - TODO
-  - `/users/:username/report` (POST): Report other user
+  - `/user/:username/report` (POST): Report other user
     - TODO
-  - `/users/:username/rating` (POST) => (need jwt and buy from user) send a rating to the user
+  - `/user/:username/rating` (POST) => (need jwt and buy from user) send a rating to the user
     - TODO
-  - `/users/:username/relatory` (GET) => (need jwt) monthly user relatory
+  - `/user/:username/relatory` (GET) => (need jwt) monthly user relatory
     - TODO
-  - `/users/:username/selling` (GET) => user items for sale   
+  - `/user/:username/selling` (GET) => user items for sale   
     - TODO
-  - `/users/:username/cart` (GET) => Get user cart items
+  - `/user/:username/cart` (GET) => Get user cart items
     - TODO
-  - `/users/:username/cart` (POST) => add item to user cart
+  - `/user/:username/cart` (POST) => add item to user cart
     - TODO
-  - `/users/:username/cart` (DELETE) => Delete item from user cart
+  - `/user/:username/cart` (DELETE) => Delete item from user cart
     - TODO
-  - `/users/:username/favs` (GET) => Get all user fav posts
+  - `/user/:username/favs` (GET) => Get all user fav posts
     - TODO
 
 # MARKETPLACE
