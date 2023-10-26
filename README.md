@@ -41,36 +41,36 @@ WORK IN PROGRESS
 
 # MARKETPLACE
 
-  - `/create` (POST) => Create sale post
+  - `/create` (POST) => Create sale product
     - TODO
   - `/market` (GET) => Get all market items
     - TODO
-  - `/market/:id` (PATCH) => edit sale post
+  - `/market/:id` (PATCH) => edit sale product
     - TODO
-  - `/market/:id` (GET) => Get sale post
+  - `/market/:id` (GET) => Get sale product
     - TODO
-  - `/market/:id/rating` (POST) => (need jwt and buy) send a rating to the post
+  - `/market/:id/rating` (POST) => (need jwt and buy) send a rating to the product
     - TODO
-  - `/market/:id/comment` (POST) => (need jwt and buy) create a comment on the post
+  - `/market/:id/comment` (POST) => (need jwt and buy) create a comment on the product
     - TODO
-  - `/market/:id/comment` (GET) => Get post comments
+  - `/market/:id/comment` (GET) => Get product comments
     - TODO
-  - `/market/:id/comment/:id` (PATCH) => edit post comment
+  - `/market/:id/comment/:id` (PATCH) => edit product comment
     - TODO
-  - `/market/:id/comment/:id` (DELETE) => Delete post comment
+  - `/market/:id/comment/:id` (DELETE) => Delete product comment
     - TODO
-  - `/market/:id/buy` (POST) => (need jwt) buy item from post
+  - `/market/:id/buy` (POST) => (need jwt) buy item from product
     - TODO
-  - `/market/:id/report` (POST): Report post
+  - `/market/:id/report` (POST): Report product
     - TODO
-  - `/market/:id/fav` (POST) => add post to user favs
+  - `/market/:id/fav` (POST) => add product to user favs
     - TODO
 
 # SEARCH
 
   - `/api/search/users` (GET) => Search users
     - TODO
-  - `/api/search/posts` (GET) => Search posts
+  - `/api/search/products` (GET) => Search products
     - TODO
 
 ## TABLES 
@@ -80,11 +80,11 @@ WORK IN PROGRESS
   - ID
   - name
   - description
-  - manufacturing_data
-  - expiration_data
+  - manufacturing_date
+  - expiration_date
   - quantity
   - price (FK)
-  - create_at
+  - created_at
 
 # PRODUCER
 
