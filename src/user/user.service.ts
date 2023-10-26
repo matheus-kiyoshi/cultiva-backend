@@ -75,7 +75,12 @@ export class UserService {
     };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const deletedUser = await this.prisma.user.delete({ where: { id } });
+    if (!deletedUser) {
+      throw new HttpException('Error deleting user', 500);
+    }
+    
+    return "User deleted";
   }
 }

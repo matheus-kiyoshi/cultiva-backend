@@ -38,8 +38,13 @@ export class UserController {
     }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Delete()
+  @HttpCode(200)
+  remove(@Request() req: AuthRequest) {
+    if (req.user.id) {
+      return this.userService.remove(req.user.id);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
   }
 }
