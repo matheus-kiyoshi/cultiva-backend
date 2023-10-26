@@ -2,7 +2,7 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { User } from './entities/user.entity';
+import { Address, User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
 
@@ -55,8 +55,24 @@ export class UserService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const data: Prisma.UserUpdateInput = {
+      ...updateUserDto,
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data,
+    })
+
+    if (!updatedUser) {
+      throw new HttpException('Error updating user', 500);
+    }
+
+    return {
+      ...updatedUser,
+      password: undefined,
+    };
   }
 
   remove(id: number) {

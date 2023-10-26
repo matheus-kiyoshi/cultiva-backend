@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
+import { Request, Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, HttpException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import { AuthRequest } from 'src/auth/models/AuthRequest';
 
 @Controller('user')
 export class UserController {
@@ -27,10 +28,14 @@ export class UserController {
     return this.userService.findById(id);
   }
 
-  @Patch(':id')
-  @HttpCode(204)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Patch()
+  @HttpCode(200)
+  update(@Request() req: AuthRequest, @Body() updateUserDto: UpdateUserDto) {
+    if (req.user.id) {
+      return this.userService.update(req.user.id, updateUserDto);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
   }
 
   @Delete(':id')
