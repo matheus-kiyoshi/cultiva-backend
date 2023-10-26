@@ -21,8 +21,9 @@ CREATE TABLE "User" (
     "name" VARCHAR(30) NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "addressId" TEXT NOT NULL,
-    "rating" INTEGER[],
+    "telephone" TEXT,
+    "addressId" TEXT,
+    "rating" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -105,17 +106,6 @@ CREATE TABLE "Address" (
 );
 
 -- CreateTable
-CREATE TABLE "Telephone" (
-    "id" TEXT NOT NULL,
-    "ddd" INTEGER NOT NULL,
-    "number" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-
-    CONSTRAINT "Telephone_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "_ClientToProduct" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -131,9 +121,6 @@ CREATE UNIQUE INDEX "Producer_cpf_key" ON "Producer"("cpf");
 CREATE UNIQUE INDEX "Producer_cnpj_key" ON "Producer"("cnpj");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Telephone_userId_key" ON "Telephone"("userId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "_ClientToProduct_AB_unique" ON "_ClientToProduct"("A", "B");
 
 -- CreateIndex
@@ -143,7 +130,7 @@ CREATE INDEX "_ClientToProduct_B_index" ON "_ClientToProduct"("B");
 ALTER TABLE "Product" ADD CONSTRAINT "Product_producerId_fkey" FOREIGN KEY ("producerId") REFERENCES "Producer"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Producer" ADD CONSTRAINT "Producer_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -177,9 +164,6 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Telephone" ADD CONSTRAINT "Telephone_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ClientToProduct" ADD CONSTRAINT "_ClientToProduct_A_fkey" FOREIGN KEY ("A") REFERENCES "Client"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
