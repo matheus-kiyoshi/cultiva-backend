@@ -31,10 +31,11 @@ model User {
   id        String     @id @default(uuid())
   name      String     @db.VarChar(30)
   email     String     @unique
+  password  String
   telephone Telephone?
-  address   Address    @relation(fields: [addressId], references: [id])
-  addressId String
-  rating    Int[]
+  address   Address?   @relation(fields: [addressId], references: [id])
+  addressId String?
+  rating    Int[]      @default([])
   createdAt DateTime   @default(now())
 
   producer Producer?
@@ -52,10 +53,11 @@ model Producer {
 }
 
 model Client {
-  userId    String    @id
-  user      User      @relation(fields: [userId], references: [id])
-  favorites Product[]
-  purchases Buy[]
+  userId             String    @id
+  user               User      @relation(fields: [userId], references: [id])
+  favorites          Product[]
+  purchases          Buy[]
+  commentsOnProducts Comment[]
 }
 
 model Order {
@@ -91,6 +93,8 @@ model Sale {
 
 model Comment {
   id        String   @id @default(uuid())
+  client    Client   @relation(fields: [clientId], references: [userId])
+  clientId  String
   content   String
   rating    Int
   createdAt DateTime @default(now())
@@ -107,8 +111,10 @@ model Address {
   street     String
   number     Int
   district   String
-  cep        String
   complement String
+  cep        String
+  city       String
+  state      String
   users      User[]
 }
 

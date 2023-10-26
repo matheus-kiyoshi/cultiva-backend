@@ -20,6 +20,7 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" VARCHAR(30) NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "addressId" TEXT NOT NULL,
     "rating" INTEGER[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -78,6 +79,7 @@ CREATE TABLE "Sale" (
 -- CreateTable
 CREATE TABLE "Comment" (
     "id" TEXT NOT NULL,
+    "clientId" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "rating" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -94,8 +96,10 @@ CREATE TABLE "Address" (
     "street" TEXT NOT NULL,
     "number" INTEGER NOT NULL,
     "district" TEXT NOT NULL,
-    "cep" TEXT NOT NULL,
     "complement" TEXT NOT NULL,
+    "cep" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "state" TEXT NOT NULL,
 
     CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
 );
@@ -164,6 +168,9 @@ ALTER TABLE "Sale" ADD CONSTRAINT "Sale_producerId_fkey" FOREIGN KEY ("producerI
 
 -- AddForeignKey
 ALTER TABLE "Sale" ADD CONSTRAINT "Sale_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
