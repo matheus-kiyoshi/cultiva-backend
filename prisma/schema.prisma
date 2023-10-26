@@ -8,57 +8,63 @@ datasource db {
 }
 
 model Product {
-  id                 String    @id @default(uuid())
-  name               String    @db.VarChar(30)
-  description        String    @db.VarChar(256)
-  manufacturing_date DateTime
-  expiration_date    DateTime
-  sold_out           Boolean   @default(true)
-  quantity           Int       @default(0)
-  price              Decimal
-  rating             Int[]
-  created_at         DateTime  @default(now())
-  buys               Buy[]
-  sales              Sale[]
-  Comment            Comment[]
+  id                String   @id @default(uuid())
+  name              String   @db.VarChar(30)
+  description       String   @db.VarChar(256)
+  manufacturingDate DateTime
+  expirationDate    DateTime
+  soldOut           Boolean  @default(true)
+  quantity          Int      @default(0)
+  price             Decimal
+  rating            Int[]
+  createdAt         DateTime @default(now())
+
+  producer   Producer  @relation(fields: [producerId], references: [userId])
+  producerId String
+  buys       Buy[]
+  sales      Sale[]
+  comments   Comment[]
+  favorites  Client[]
 }
 
 model User {
-  id         String     @id @default(uuid())
-  name       String     @db.VarChar(30)
-  email      String     @unique
-  telephone  Telephone?
-  address    Address    @relation(fields: [addressId], references: [id])
-  addressId  String
-  rating     Int[]
-  created_at DateTime   @default(now())
+  id        String     @id @default(uuid())
+  name      String     @db.VarChar(30)
+  email     String     @unique
+  telephone Telephone?
+  address   Address    @relation(fields: [addressId], references: [id])
+  addressId String
+  rating    Int[]
+  createdAt DateTime   @default(now())
 
   producer Producer?
   client   Client?
-  Comment  Comment[]
+  comments Comment[]
 }
 
 model Producer {
-  userId String  @id
-  user   User    @relation(fields: [userId], references: [id])
-  cpf    String? @unique
-  cnpj   String? @unique
-  sales  Sale[]
+  userId   String    @id
+  user     User      @relation(fields: [userId], references: [id])
+  products Product[]
+  cpf      String?   @unique
+  cnpj     String?   @unique
+  sales    Sale[]
 }
 
 model Client {
-  userId    String @id
-  user      User   @relation(fields: [userId], references: [id])
+  userId    String    @id
+  user      User      @relation(fields: [userId], references: [id])
+  favorites Product[]
   purchases Buy[]
 }
 
 model Order {
-  id             String   @id @default(uuid())
-  value          Decimal
-  payment_method String
-  created_at     DateTime @default(now())
-  Buy            Buy[]
-  Sale           Sale[]
+  id            String   @id @default(uuid())
+  value         Decimal
+  paymentMethod String
+  createdAt     DateTime @default(now())
+  buy           Buy[]
+  sale          Sale[]
 }
 
 model Buy {
