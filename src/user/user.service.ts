@@ -11,13 +11,18 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
+    const user = await this.prisma.user.findUnique({ where: { email: createUserDto.email } });
+    if (user) {
+      throw new HttpException('User already exists', 400);
+    }
+    
     const data: Prisma.UserCreateInput = {
       ...createUserDto,
       password: await bcrypt.hash(createUserDto.password, 10),
     }
 
     const createdUser = await this.prisma.user.create({ data });
-
+    console.log(createdUser)
     if (!createdUser) {
       throw new HttpException('Error creating user', 500);
     }
@@ -32,6 +37,8 @@ export class UserService {
     const users = await this.prisma.user.findMany();
     if (!users) {
       throw new HttpException('Error finding users', 500);
+    } else if (users.length === 0) {
+      throw new HttpException('No users found', 404);
     }
 
     return users;
@@ -55,7 +62,7 @@ export class UserService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {    
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: {
