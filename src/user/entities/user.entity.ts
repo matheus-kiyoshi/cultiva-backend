@@ -1,102 +1,97 @@
-type create<T> = {}
+import { Prisma } from "@prisma/client";
+import { DecimalJsLike } from "@prisma/client/runtime/library";
 
-export class User {
-	id?: string;
-	name: string;
-	email: string;
-	password?: string;
-	telephone?: string | null;
-	address?: create<Address>;
-	rating: number[];
-	createdAt: Date;
-	producer?: create<Producer>;
-	client?: create<Client>;
-	comments?: create<Comment[]>;
+export class User implements Prisma.UserUncheckedCreateInput {
+	id?: string
+	name: string
+	email: string
+	password: string
+	telephone?: string | null
+	addressId?: string | null
+	rating?: Prisma.UserCreateratingInput | number[]
+	createdAt?: Date | string
+	producer?: Prisma.ProducerUncheckedCreateNestedOneWithoutUserInput
+	client?: Prisma.ClientUncheckedCreateNestedOneWithoutUserInput
+	comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
 }
 
-export class EditableUserInformations {
-	name: string;
-	email: string;
-	telephone: String;
-	address: create<Address>;
+export class Producer implements Prisma.ProducerUncheckedCreateInput {
+	userId: string
+	cpf?: string | null
+	cnpj?: string | null
+	products?: Prisma.ProductUncheckedCreateNestedManyWithoutProducerInput
+	sales?: Prisma.SaleUncheckedCreateNestedManyWithoutProducerInput
 }
 
-export class Producer extends User {
-	user: User;
-	products: Product[];
-	cpf?: string;
-	cnpj?: string;
-	sales: Sale[];
+export class Client implements Prisma.ClientUncheckedCreateInput {
+	userId: string
+	favorites?: Prisma.ProductUncheckedCreateNestedManyWithoutFavoritesInput
+	purchases?: Prisma.BuyUncheckedCreateNestedManyWithoutClientInput
+	commentsOnProducts?: Prisma.CommentUncheckedCreateNestedManyWithoutClientInput
 }
 
-export class Client extends User {
-	user: User;
-	favorites: Product[];
-	purchases: Buy[];
-	commentsOnProducts: Comment[];
+export class Address implements Prisma.AddressUncheckedCreateInput {
+	id?: string
+	street: string
+	number: number
+	district: string
+	complement: string
+	cep: string
+	city: string
+	state: string
+	userId?: string | null
 }
 
-export class Address {
-	id: string;
-	street: string;
-	number: number;
-	district: string;
-	complement: string;
-	cep: string;
-	city: string;
-	state: string;
+export class Comment implements Prisma.CommentUncheckedCreateInput {
+	id?: string
+	clientId: string
+	content: string
+	rating: number
+	createdAt?: Date | string
+	updatedAt?: Date | string
+	userId?: string | null
+	productId?: string | null
 }
 
-export class Comment {
-	id: string;
-	client: Client;
-	content: string;
-	rating: number;
-	createdAt: Date;
-	updatedAt: Date;
-	user: User;
-	product: Product;
+export class Sale implements Prisma.SaleUncheckedCreateInput {
+	id?: string
+	productId: string
+	producerId: string
+	orderId: string
+	quantity: number
 }
 
-export class Sale {
-	id: string;
-	product: Product;
-	producer: Producer;
-	order: Order;
-	quantity: number;
+export class Buy implements Prisma.BuyUncheckedCreateInput {
+	id?: string
+	productId: string
+	clientId: string
+	orderId: string
+	quantity: number
 }
 
-export class Buy {
-	id: string;
-	product: Product;
-	client: Client;
-	order: Order;
-	quantity: number;
+export class Product implements Prisma.ProductUncheckedCreateInput {
+	id?: string
+	name: string
+	description: string
+	manufacturingDate: Date | string
+	expirationDate: Date | string
+	soldOut?: boolean
+	quantity?: number
+	price: Prisma.Decimal | DecimalJsLike | number | string
+	rating?: Prisma.ProductCreateratingInput | number[]
+	createdAt?: Date | string
+	producerId: string
+	buys?: Prisma.BuyUncheckedCreateNestedManyWithoutProductInput
+	sales?: Prisma.SaleUncheckedCreateNestedManyWithoutProductInput
+	comments?: Prisma.CommentUncheckedCreateNestedManyWithoutProductInput
+	favorites?: Prisma.ClientUncheckedCreateNestedManyWithoutFavoritesInput
 }
 
-export class Product {
-	id: string;
-	name: string;
-	description: string;
-	manufacturingDate: Date;
-	expirationDate: Date;
-	soldOut: boolean;
-	quantity: number;
-	price: number;
-	rating: number[];
-	createdAt: Date;
-	producer: Producer;
-	buys: Buy[];
-	sales: Sale[];
-	comments: Comment[];
-	favorites: Client[];
-}
-
-export class Order {
-	id: string;
-	value: number;
-	paymentMethod: string;
-	createdAt: Date;
-	buy: Buy[];
-	sale: Sale[];
+export class Order implements Prisma.OrderUncheckedCreateInput {
+	id?: string
+	value: Prisma.Decimal | DecimalJsLike | number | string
+	paymentMethod: string
+	createdAt?: Date | string
+	buy?: Prisma.BuyCreateNestedManyWithoutOrderInput
+	sale?: Prisma.SaleCreateNestedManyWithoutOrderInput
 }

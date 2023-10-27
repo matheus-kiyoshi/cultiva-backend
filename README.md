@@ -7,14 +7,14 @@ WORK IN PROGRESS
 # USER 
 
   - `/user` (POST) => Create user
-    - TODO
+    - DONE
   - `/login` (POST) => Sign-in user
-    - TODO
+    - DONE
   - `/user` (GET) => Get all users
-    - TODO
-  - `/user/:username` (GET) => Get User Public Data
-    - TODO
-  - `/user/:username/password` (PATCH) => (need jwt) Update user password
+    - DONE
+  - `/user/:id` (GET) => Get User Public Data
+    - DONE
+  - `/user/password` (PATCH) => (need jwt) Update user password
     - TODO
   - `/user/:username/resetpassword` (PATCH) => (email verify) reset user password
     - TODO

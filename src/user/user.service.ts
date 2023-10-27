@@ -10,7 +10,7 @@ import { Prisma } from '@prisma/client';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
     const data: Prisma.UserCreateInput = {
       ...createUserDto,
       password: await bcrypt.hash(createUserDto.password, 10),
@@ -56,13 +56,14 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const data: Prisma.UserUpdateInput = {
-      ...updateUserDto,
-    }
-
     const updatedUser = await this.prisma.user.update({
       where: { id },
-      data,
+      data: {
+        ...updateUserDto,
+      },
+      include: {
+        address: true
+      }
     })
 
     if (!updatedUser) {

@@ -19,8 +19,8 @@ export class AuthService {
       sub: user.id ? user.id : '',
       email: user.email,
       name: user.name,
-			rating: user.rating,
-			createdAt: user.createdAt,
+      telephone: user.telephone,
+      addressId: user.addressId,
     };
 
     return {
@@ -28,7 +28,7 @@ export class AuthService {
     };
   }
 
-  async validateUser(email: string, password: string): Promise<User> {
+  async validateUser(email: string, password: string): Promise<Partial<User>> {
     const user = await this.userService.findByEmail(email);
 
     if (user) {

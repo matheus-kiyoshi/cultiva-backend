@@ -1,6 +1,10 @@
+import { Prisma } from '@prisma/client';
 import { User } from '../entities/user.entity';
 import {
   IsEmail,
+  IsMobilePhone,
+  IsObject,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -8,6 +12,7 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto extends User {
+
   @IsEmail()
   email: string;
 
@@ -21,4 +26,13 @@ export class CreateUserDto extends User {
 
   @IsString()
   name: string;
+
+  @IsOptional()
+  @IsMobilePhone()
+  telephone: string;
+
+  @IsOptional()
+  @IsObject()
+  address: Prisma.AddressUpsertWithoutUserInput;
+
 }
