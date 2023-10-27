@@ -7,10 +7,66 @@ WORK IN PROGRESS
 # USER 
 
   - `/user` (POST) => Create user
-    - DONE
+    - JSON EXAMPLE
+    ```
+      {
+        "name": "name",
+        "email": "email@email.com",
+        "password": "password123"
+      }
+    ```
+    - RESPONSE EXAMPLE
+    ```
+      {
+        "id": "uuid generated",
+        "name": "name",
+        "email": "email@email.com",
+        "telephone": null,
+        "addressId": null,
+        "rating": [],
+        "createdAt": "actual ISO Date"
+      }
+    ```
   - `/login` (POST) => Sign-in user
-    - DONE
+    - JSON EXAMPLE
+    ```
+      {
+        "email": "email@email.com",
+        "password": "password123"
+      }
+    ```
+    - RESPONSE EXAMPLE
+    ```
+      {
+        "access_token": "jwt token with secret"
+      }
+    ```
   - `/user` (GET) => Get all users
+    - DONE
+  - `/user` (PATCH) => Edit user informations
+    - JSON EXAMPLE
+    ```
+      {
+        "name": "new name
+        "email": "newemail@email.com",
+        "telephone": "210928401283",
+        "address": {
+          /* if user doesn't have a registered address -> use CREATE
+             if the user already has a registered address -> use UPDATE
+          */
+          "create/update": {
+            "street": "your street",
+            "number": 123,
+            "district": "your district",
+            "complement": "your complement",
+            "cep": "your zip code",
+            "city": "your city",
+            "state": "your state"
+          }
+        }
+      }
+    ```
+  - `/user/` (DELETE) => (need jwt) Delete user
     - DONE
   - `/user/:id` (GET) => Get User Public Data
     - DONE
