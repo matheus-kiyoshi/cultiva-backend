@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Address, User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
+import { UpdateUserPasswordDto } from './dto/update-user-password';
 
 @Injectable()
 export class UserService {
@@ -90,5 +91,37 @@ export class UserService {
     }
     
     return "User deleted";
+  }
+
+  async updatePassword(id: string, updateUserPasswordDto: UpdateUserPasswordDto) {
+    if (updateUserPasswordDto.currentPassword === updateUserPasswordDto.newPassword) {
+      throw new HttpException('New password cannot be the same as the current password', 400);
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const isPasswordValid = await bcrypt.compare(updateUserPasswordDto.currentPassword, user.password);
+    if (!isPasswordValid) {
+      throw new HttpException('Invalid current password', 401);
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        password: await bcrypt.hash(updateUserPasswordDto.newPassword, 10),
+      },
+    })
+
+    if (!updatedUser) {
+      throw new HttpException('Error updating password', 500);
+    }
+
+    return {
+      ...updatedUser,
+      password: undefined,
+    }
   }
 }

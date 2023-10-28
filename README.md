@@ -71,7 +71,13 @@ WORK IN PROGRESS
   - `/user/:id` (GET) => Get User Public Data
     - DONE
   - `/user/password` (PATCH) => (need jwt) Update user password
-    - TODO
+    - JSON EXAMPLE
+    ```
+      {
+        "currentPassword": "user password",
+        "newPassword": "user new password"
+      }
+    ```
   - `/user/:username/resetpassword` (PATCH) => (email verify) reset user password
     - TODO
   - `/user/:username/profile` (PATCH) => (need jwt) Update user data

@@ -4,6 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { AuthRequest } from 'src/auth/models/AuthRequest';
+import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { UpdateUserPasswordDto } from './dto/update-user-password';
 
 @Controller('user')
 export class UserController {
@@ -43,6 +45,18 @@ export class UserController {
   remove(@Request() req: AuthRequest) {
     if (req.user.id) {
       return this.userService.remove(req.user.id);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @Patch('password')
+  @HttpCode(200)
+  updatePassword(
+    @Request() req: AuthRequest, 
+    @Body() updateUserPasswordDto: UpdateUserPasswordDto) {
+    if (req.user.id) {
+      return this.userService.updatePassword(req.user.id, updateUserPasswordDto);
     } else {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
