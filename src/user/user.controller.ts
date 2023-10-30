@@ -6,6 +6,8 @@ import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { AuthRequest } from 'src/auth/models/AuthRequest';
 import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { UpdateUserPasswordDto } from './dto/update-user-password';
+import { ResetPasswordUserDto } from './dto/reset-password-user.dto';
+import { RequestPasswordUserDto } from './dto/request-password-reset.dto';
 
 @Controller('user')
 export class UserController {
@@ -60,5 +62,23 @@ export class UserController {
     } else {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  @IsPublic()
+  @Patch('password/requestreset')
+  @HttpCode(200)
+  requestPasswordRest(
+    @Body() requestPasswordUserDto: RequestPasswordUserDto
+  ) {
+    return this.userService.requestPasswordReset(requestPasswordUserDto.email);
+  }
+
+  @IsPublic()
+  @Patch('password/reset')
+  @HttpCode(200)
+  resetPassword(
+    @Body() resetPasswordUserDto: ResetPasswordUserDto,
+  ) {
+    return this.userService.resetPassword(resetPasswordUserDto);
   }
 }
