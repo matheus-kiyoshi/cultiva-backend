@@ -43,7 +43,7 @@ WORK IN PROGRESS
     ```
   - `/user` (GET) => Get all users
     - DONE
-  - `/user` (PATCH) => Edit user informations
+  - `/user` (PATCH) => ( need jwt )Edit user informations
     - JSON EXAMPLE
     ```
       {
@@ -78,16 +78,33 @@ WORK IN PROGRESS
         "newPassword": "user new password"
       }
     ```
-  - `/user/:username/resetpassword` (PATCH) => (email verify) reset user password
-    - TODO
-  - `/user/:username/profile` (PATCH) => (need jwt) Update user data
-    - TODO
-  - `/user/:username` (DELETE) => (need jwt) Delete user
-    - TODO
-  - `/user/:username/report` (POST): Report other user
-    - TODO
-  - `/user/:username/rating` (POST) => (need jwt and buy from user) send a rating to the user
-    - TODO
+  - `/user/password/requestreset` (PATCH) => send a email to reset user password
+    - JSON EXAMPLE
+    ```
+      {
+        "email": "your@email.com"
+      }
+    ```
+    - RESPONSE
+    ```
+      return the link to reset password by email
+    ```
+  - `/user/password/reset` (PATCH) => (need token received by email) reset user password
+    - JSON EXAMPLE
+    ```
+      {
+        "id": "user id",
+        "password": "new password",
+        "token": "token received in email link"
+      }
+    ```
+  - `/user/:id/rating` (POST) => (need jwt and buy from user) send a rating to the user
+    - JSON EXAMPLE
+    ```
+      {
+        "rating": number (1 - 5),
+      }
+    ```
   - `/user/:username/relatory` (GET) => (need jwt) monthly user relatory
     - TODO
   - `/user/:username/selling` (GET) => user items for sale   

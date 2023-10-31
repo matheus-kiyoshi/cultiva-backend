@@ -24,7 +24,8 @@ model Product {
   buys       Buy[]
   sales      Sale[]
   comments   Comment[]
-  favorites  Client[]
+  favorites  Client[]  @relation("userFavorites")
+  cart       Client[]  @relation("userCart")
 }
 
 model User {
@@ -56,7 +57,8 @@ model Producer {
 model Client {
   userId             String    @id
   user               User      @relation(fields: [userId], references: [id])
-  favorites          Product[]
+  cart               Product[] @relation("userCart")
+  favorites          Product[] @relation("userFavorites")
   purchases          Buy[]
   commentsOnProducts Comment[]
 }

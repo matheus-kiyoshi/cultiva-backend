@@ -21,6 +21,7 @@ CREATE TABLE "User" (
     "name" VARCHAR(30) NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "token" TEXT,
     "telephone" TEXT,
     "addressId" TEXT,
     "rating" INTEGER[] DEFAULT ARRAY[]::INTEGER[],
@@ -101,12 +102,19 @@ CREATE TABLE "Address" (
     "cep" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "state" TEXT NOT NULL,
+    "userId" TEXT,
 
     CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "_ClientToProduct" (
+CREATE TABLE "_userCart" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_userFavorites" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
 );
@@ -121,16 +129,22 @@ CREATE UNIQUE INDEX "Producer_cpf_key" ON "Producer"("cpf");
 CREATE UNIQUE INDEX "Producer_cnpj_key" ON "Producer"("cnpj");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_ClientToProduct_AB_unique" ON "_ClientToProduct"("A", "B");
+CREATE UNIQUE INDEX "Address_userId_key" ON "Address"("userId");
 
 -- CreateIndex
-CREATE INDEX "_ClientToProduct_B_index" ON "_ClientToProduct"("B");
+CREATE UNIQUE INDEX "_userCart_AB_unique" ON "_userCart"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_userCart_B_index" ON "_userCart"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_userFavorites_AB_unique" ON "_userFavorites"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_userFavorites_B_index" ON "_userFavorites"("B");
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_producerId_fkey" FOREIGN KEY ("producerId") REFERENCES "Producer"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_addressId_fkey" FOREIGN KEY ("addressId") REFERENCES "Address"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Producer" ADD CONSTRAINT "Producer_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -166,7 +180,16 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_ClientToProduct" ADD CONSTRAINT "_ClientToProduct_A_fkey" FOREIGN KEY ("A") REFERENCES "Client"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_ClientToProduct" ADD CONSTRAINT "_ClientToProduct_B_fkey" FOREIGN KEY ("B") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_userCart" ADD CONSTRAINT "_userCart_A_fkey" FOREIGN KEY ("A") REFERENCES "Client"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_userCart" ADD CONSTRAINT "_userCart_B_fkey" FOREIGN KEY ("B") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_userFavorites" ADD CONSTRAINT "_userFavorites_A_fkey" FOREIGN KEY ("A") REFERENCES "Client"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_userFavorites" ADD CONSTRAINT "_userFavorites_B_fkey" FOREIGN KEY ("B") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
