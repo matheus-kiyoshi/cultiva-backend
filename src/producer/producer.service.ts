@@ -55,19 +55,73 @@ export class ProducerService {
     }
   }
 
-  findAll() {
-    return `This action returns all producer`;
+  async findAll() {
+    const producers = await this.prisma.producer.findMany();
+    if (!producers) {
+      throw new HttpException('Error finding producers', 500);
+    } else if (producers.length === 0) {
+      throw new HttpException('No producers found', 404);
+    }
+
+    return producers
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} producer`;
+  async findOne(id: string) {
+    const producer = await this.prisma.producer.findUnique({ where: { userId: id }})
+    if (!producer) {
+      throw new HttpException('Producer not found', 404);
+    }
+
+    return producer
   }
 
-  update(id: number, updateProducerDto: UpdateProducerDto) {
-    return `This action updates a #${id} producer`;
+  async update(id: string, updateProducerDto: UpdateProducerDto) {
+    if (updateProducerDto.cpf) {
+      const isValidCpf = cpf.isValid(updateProducerDto.cpf);
+      if (!isValidCpf) {
+        throw new HttpException("Invalid CPF", 400)
+      }
+
+      const prodCpf = cpf.format(updateProducerDto.cpf)
+      updateProducerDto.cpf = prodCpf
+    }
+
+    if (updateProducerDto.cnpj) {
+      const isValidCnpj = cnpj.isValid(updateProducerDto.cnpj);
+      if (!isValidCnpj) {
+        throw new HttpException("Invalid CNPJ", 400)
+      }
+      
+      const prodCnpj = cnpj.format(updateProducerDto.cnpj)
+      updateProducerDto.cnpj = prodCnpj
+    }
+
+    const updatedProducer = await this.prisma.producer.update({
+      where: { userId: id },
+      data: {
+        ...updateProducerDto
+      },
+    })
+
+    if (!updatedProducer) {
+      throw new HttpException('Error updating user', 500);
+    }
+
+    return {
+      ...updatedProducer
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} producer`;
+  remove(id: string) {
+    const deletedProducer = this.prisma.producer.delete({
+      where: { userId: id },
+    })
+    if (!deletedProducer) {
+      throw new HttpException('Error deleting producer', 500);
+    }
+
+    return {
+      ...deletedProducer
+    }
   }
 }
