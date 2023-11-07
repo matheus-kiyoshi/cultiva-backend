@@ -16,21 +16,6 @@ export class User implements Prisma.UserUncheckedCreateInput {
 	comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
 }
 
-export class Producer implements Prisma.ProducerUncheckedCreateInput {
-	userId: string
-	cpf?: string | null
-	cnpj?: string | null
-	products?: Prisma.ProductUncheckedCreateNestedManyWithoutProducerInput
-	sales?: Prisma.SaleUncheckedCreateNestedManyWithoutProducerInput
-}
-
-export class Client implements Prisma.ClientUncheckedCreateInput {
-	userId: string
-	favorites?: Prisma.ProductUncheckedCreateNestedManyWithoutFavoritesInput
-	purchases?: Prisma.BuyUncheckedCreateNestedManyWithoutClientInput
-	commentsOnProducts?: Prisma.CommentUncheckedCreateNestedManyWithoutClientInput
-}
-
 export class Address implements Prisma.AddressUncheckedCreateInput {
 	id?: string
 	street: string
@@ -68,24 +53,6 @@ export class Buy implements Prisma.BuyUncheckedCreateInput {
 	clientId: string
 	orderId: string
 	quantity: number
-}
-
-export class Product implements Prisma.ProductUncheckedCreateInput {
-	id?: string
-	name: string
-	description: string
-	manufacturingDate: Date | string
-	expirationDate: Date | string
-	soldOut?: boolean
-	quantity?: number
-	price: Prisma.Decimal | DecimalJsLike | number | string
-	rating?: Prisma.ProductCreateratingInput | number[]
-	createdAt?: Date | string
-	producerId: string
-	buys?: Prisma.BuyUncheckedCreateNestedManyWithoutProductInput
-	sales?: Prisma.SaleUncheckedCreateNestedManyWithoutProductInput
-	comments?: Prisma.CommentUncheckedCreateNestedManyWithoutProductInput
-	favorites?: Prisma.ClientUncheckedCreateNestedManyWithoutFavoritesInput
 }
 
 export class Order implements Prisma.OrderUncheckedCreateInput {

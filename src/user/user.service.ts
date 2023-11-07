@@ -2,13 +2,14 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Address, User } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { Prisma } from '@prisma/client';
 import { UpdateUserPasswordDto } from './dto/update-user-password';
 import { ResetPasswordUserDto } from './dto/reset-password-user.dto';
 import { sendEmail } from 'src/utils/email/sendEmail.util';
+import { prismaExclude } from 'src/utils/exclude/exclude-entity-attribute.util';
 
 @Injectable()
 export class UserService {
@@ -26,7 +27,6 @@ export class UserService {
     }
 
     const createdUser = await this.prisma.user.create({ data });
-    console.log(createdUser)
     if (!createdUser) {
       throw new HttpException('Error creating user', 500);
     }
@@ -38,7 +38,10 @@ export class UserService {
   }
 
   async findAll() {
-    const users = await this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany({
+      orderBy: { createdAt: 'desc' }, 
+      select: prismaExclude('User', ['password']),
+    });
     if (!users) {
       throw new HttpException('Error finding users', 500);
     } else if (users.length === 0) {
@@ -49,7 +52,10 @@ export class UserService {
   }
 
   async findById(id: string) {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({ 
+      where: { id },
+      select: prismaExclude('User', ['password']),
+    });
     if (!user) {
       throw new HttpException('User not found', 404);
     }

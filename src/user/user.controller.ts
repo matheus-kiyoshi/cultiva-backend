@@ -4,7 +4,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { AuthRequest } from 'src/auth/models/AuthRequest';
-import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { UpdateUserPasswordDto } from './dto/update-user-password';
 import { ResetPasswordUserDto } from './dto/reset-password-user.dto';
 import { RequestPasswordUserDto } from './dto/request-password-reset.dto';
