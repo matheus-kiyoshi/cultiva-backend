@@ -45,7 +45,7 @@ export class ProductService {
   }
 
   async findAll() {
-    const products = await this.prisma.product.findMany();
+    const products = await this.prisma.product.findMany({ orderBy: { createdAt: 'desc' } });
     if (!products) {
       throw new HttpException('Error finding products', 500);
     }
@@ -109,6 +109,49 @@ export class ProductService {
 
     return {
       ...deletedProduct
+    }
+  }
+
+  async rate(id: string, productId: string, rating: number) {
+    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    if (!product) {
+      throw new HttpException('Product not found', 404);
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const updatedProduct = await this.prisma.product.update({
+      where: { id: productId },
+      data: {
+        rating: {
+          push: rating
+        }
+      }
+    })
+
+    if (!updatedProduct) {
+      throw new HttpException('Error rating product', 500);
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        rating: {
+          push: rating
+        }
+      },
+    })
+
+    if (!updatedUser) {
+      throw new HttpException('Error rating user', 500);
+    }
+
+    return {
+      ...updatedUser,
+      password: undefined,
     }
   }
 }

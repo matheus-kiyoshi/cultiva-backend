@@ -4,6 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { AuthRequest } from 'src/auth/models/AuthRequest';
+import { rate } from './types/rate';
 
 @Controller('product')
 export class ProductController {
@@ -44,6 +45,16 @@ export class ProductController {
   remove(@Param('id') id: string, @Request() req: AuthRequest) {
     if (req.user.id) {
       return this.productService.remove(id, req.user.id);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @Post(':id/rate')
+  @HttpCode(200)
+  rate(@Request() req: AuthRequest, @Param('id') id: string, @Body() rating: rate) {
+    if (req.user.id) {
+      return this.productService.rate(req.user.id, id, rating.rating);
     } else {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
