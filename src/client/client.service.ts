@@ -118,7 +118,7 @@ export class ClientService {
     });
     if (!product) {
       throw new HttpException('Product not found', 404);
-    } else if (product.cart.length + 1 === product.quantity) {
+    } else if (product.cart.length === product.quantity) {
       throw new HttpException('Product out of stock', 400);
     }
 

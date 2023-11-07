@@ -31,6 +31,15 @@ export class UserService {
       throw new HttpException('Error creating user', 500);
     }
 
+    const createdClient = await this.prisma.client.create({
+      data: {
+        userId: createdUser.id
+      }
+    })
+    if (!createdClient) {
+      throw new HttpException('Error creating client', 500);
+    }
+
     return {
       ...createdUser,
       password: undefined,
