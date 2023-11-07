@@ -40,4 +40,106 @@ export class ClientService {
 
     return client
   }
+
+  async addFavorite(id: string, productId: string) {
+    const client = await this.prisma.client.findUnique({ 
+      where: { userId: id },
+      include: {
+        favorites: {
+          where: { id: productId }
+        }
+      } 
+    });
+    if (!client) {
+      throw new HttpException('User not found', 404);
+    } else if (client.favorites.length > 0) {
+      throw new HttpException('Product already added to favorites', 400);
+    }
+
+    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    if (!product) {
+      throw new HttpException('Product not found', 404);
+    }
+
+    const updatedClient = await this.prisma.client.update({
+      where: { userId: id },
+      data: {
+        favorites: {
+          connect: {
+            id: productId
+          }
+        }
+      },
+      include: {
+        favorites: true
+      }
+    })
+    if (!updatedClient) {
+      throw new HttpException('Error adding product to favorites', 500);
+    }
+
+    const updatedProduct = await this.prisma.product.update({
+      where: { id: productId },
+      data: {
+        favorites: {
+          connect: {
+            userId: id
+          }
+        }
+      }
+    })
+    if (!updatedProduct) {
+      throw new HttpException('Error adding user to product favorites', 500);
+    }
+
+    return updatedClient
+  }
+
+  async addCart(id: string, productId: string) {
+    const client = await this.prisma.client.findUnique({ 
+      where: { userId: id },
+      include: {
+        cart: {
+          where: { productId }
+        }
+      } 
+    });
+    if (!client) {
+      throw new HttpException('User not found', 404);
+    } else if (client.cart.length > 0) {
+      throw new HttpException('Product already added to cart', 400);
+    }
+
+    const product = await this.prisma.product.findUnique({ 
+      where: { id: productId },
+      include: {
+        cart: true
+      }
+    });
+    if (!product) {
+      throw new HttpException('Product not found', 404);
+    } else if (product.cart.length + 1 === product.quantity) {
+      throw new HttpException('Product out of stock', 400);
+    }
+
+    const cart = await this.prisma.cart.create({
+      data: {
+        client: {
+          connect: {
+            userId: id
+          }
+        },
+        product: {
+          connect: {
+            id: productId
+          }
+        }
+      }
+    })
+    if (!cart) {
+      throw new HttpException('Error adding product to cart', 500);
+    }
+
+    return cart
+  }
 }

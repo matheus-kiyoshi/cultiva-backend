@@ -8,59 +8,65 @@ datasource db {
 }
 
 model Product {
-  id                String   @id @default(uuid())
-  name              String   @db.VarChar(30)
-  description       String   @db.VarChar(256)
+  id                String    @id @default(uuid())
+  name              String    @db.VarChar(30)
+  description       String    @db.VarChar(256)
   manufacturingDate DateTime
   expirationDate    DateTime
-  soldOut           Boolean  @default(true)
-  quantity          Int      @default(0)
+  soldOut           Boolean   @default(true)
+  quantity          Int       @default(0)
   price             Decimal
   rating            Int[]
-  createdAt         DateTime @default(now())
-
-  producer   Producer  @relation(fields: [producerId], references: [userId])
-  producerId String
-  buys       Buy[]
-  sales      Sale[]
-  comments   Comment[]
-  favorites  Client[]  @relation("userFavorites")
-  cart       Client[]  @relation("userCart")
+  createdAt         DateTime  @default(now())
+  producerId        String
+  buys              Buy[]
+  comments          Comment[]
+  producer          Producer  @relation(fields: [producerId], references: [userId])
+  sales             Sale[]
+  cart              Cart[]
+  favorites         Client[]
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String   @db.VarChar(30)
-  email     String   @unique
+  id        String    @id @default(uuid())
+  name      String    @db.VarChar(30)
+  email     String    @unique
   password  String
   token     String?
   telephone String?
-  address   Address?
   addressId String?
-  rating    Int[]    @default([])
-  createdAt DateTime @default(now())
-
-  producer Producer?
-  client   Client?
-  comments Comment[]
+  rating    Int[]     @default([])
+  createdAt DateTime  @default(now())
+  address   Address?
+  client    Client?
+  comments  Comment[]
+  producer  Producer?
 }
 
 model Producer {
   userId   String    @id
-  user     User      @relation(fields: [userId], references: [id])
-  products Product[]
   cpf      String?   @unique
   cnpj     String?   @unique
+  user     User      @relation(fields: [userId], references: [id])
+  products Product[]
   sales    Sale[]
 }
 
 model Client {
   userId             String    @id
-  user               User      @relation(fields: [userId], references: [id])
-  cart               Product[] @relation("userCart")
-  favorites          Product[] @relation("userFavorites")
   purchases          Buy[]
+  user               User      @relation(fields: [userId], references: [id])
   commentsOnProducts Comment[]
+  cart               Cart[]
+  favorites          Product[] 
+}
+
+model Cart {
+  cartId String @id @default(uuid())
+  clientId String 
+  productId String
+  client Client @relation(fields: [clientId], references: [userId])
+  product Product @relation(fields: [productId], references: [id])
 }
 
 model Order {
@@ -74,39 +80,38 @@ model Order {
 
 model Buy {
   id        String  @id @default(uuid())
-  product   Product @relation(fields: [productId], references: [id])
   productId String
-  client    Client  @relation(fields: [clientId], references: [userId])
   clientId  String
-  order     Order   @relation(fields: [orderId], references: [id])
   orderId   String
   quantity  Int
+  client    Client  @relation(fields: [clientId], references: [userId])
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Sale {
   id         String   @id @default(uuid())
-  product    Product  @relation(fields: [productId], references: [id])
   productId  String
-  producer   Producer @relation(fields: [producerId], references: [userId])
   producerId String
-  order      Order    @relation(fields: [orderId], references: [id])
   orderId    String
   quantity   Int
+  order      Order    @relation(fields: [orderId], references: [id])
+  producer   Producer @relation(fields: [producerId], references: [userId])
+  product    Product  @relation(fields: [productId], references: [id])
 }
 
 model Comment {
   id        String   @id @default(uuid())
-  client    Client   @relation(fields: [clientId], references: [userId])
   clientId  String
   content   String
   rating    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  user      User?    @relation(fields: [userId], references: [id])
   userId    String?
-  product   Product? @relation(fields: [productId], references: [id])
   productId String?
+  client    Client   @relation(fields: [clientId], references: [userId])
+  product   Product? @relation(fields: [productId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
 }
 
 model Address {
@@ -118,6 +123,6 @@ model Address {
   cep        String
   city       String
   state      String
-  user       User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId     String? @unique
+  user       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

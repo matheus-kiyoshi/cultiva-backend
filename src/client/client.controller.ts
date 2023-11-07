@@ -30,4 +30,30 @@ export class ClientController {
   findOne(@Param('id') id: string) {
     return this.clientService.findOne(id);
   }
+
+  @Post(':id/favorite')
+  @HttpCode(200)
+  addFavorite(
+    @Request() req: AuthRequest,
+    @Param('id') productId: string
+  ) {
+    if (req.user.id) {
+      return this.clientService.addFavorite(req.user.id, productId);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @Post(':id/cart')
+  @HttpCode(200)
+  addCart(
+    @Request() req: AuthRequest,
+    @Param('id') productId: string
+  ) {
+    if (req.user.id) {
+      return this.clientService.addCart(req.user.id, productId);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
 }
