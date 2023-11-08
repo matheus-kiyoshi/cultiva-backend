@@ -44,6 +44,31 @@ export class ClientController {
     }
   }
 
+  @Get('/my/favorites')
+  @HttpCode(200)
+  getFavorites(
+    @Request() req: AuthRequest
+  ) {
+    if (req.user.id) {
+      return this.clientService.getFavorites(req.user.id);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @Delete(':id/favorite')
+  @HttpCode(200)
+  removeFavorite(
+    @Request() req: AuthRequest,
+    @Param('id') productId: string
+  ) {
+    if (req.user.id) {
+      return this.clientService.removeFavorite(req.user.id, productId);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
   @Post(':id/cart')
   @HttpCode(201)
   addCart(

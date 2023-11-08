@@ -95,6 +95,78 @@ export class ClientService {
     return updatedClient
   }
 
+  async getFavorites(id: string) {
+    const client = await this.prisma.client.findUnique({
+      where: { userId: id },
+      include: {
+        favorites: true
+      }
+    })
+    if (!client) {
+      throw new HttpException('User not found', 404);
+    } else if (client.favorites.length === 0) {
+      throw new HttpException('No favorites found', 404);
+    }
+
+    return client.favorites
+  }
+
+  async removeFavorite(id: string, productId: string) {
+    const client = await this.prisma.client.findUnique({ 
+      where: { userId: id },
+      include: {
+        favorites: {
+          where: { id: productId }
+        }
+      } 
+    });
+    if (!client) {
+      throw new HttpException('User not found', 404);
+    } else if (client.favorites.length === 0) {
+      throw new HttpException('Product not added to favorites', 400);
+    }
+
+    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    if (!product) {
+      throw new HttpException('Product not found', 404);
+    }
+
+    const updatedClient = await this.prisma.client.update({
+      where: { userId: id },
+      data: {
+        favorites: {
+          disconnect: {
+            id: productId
+          }
+        }
+      },
+      include: {
+        favorites: true
+      }
+    })
+
+    if (!updatedClient) {
+      throw new HttpException('Error removing product from favorites', 500);
+    }
+
+    const updatedProduct = await this.prisma.product.update({
+      where: { id: productId },
+      data: {
+        favorites: {
+          disconnect: {
+            userId: id
+          }
+        }
+      }
+    })
+
+    if (!updatedProduct) {
+      throw new HttpException('Error removing user from product favorites', 500);
+    }
+
+    return updatedClient
+  }
+
   async addCart(id: string, productId: string) {
     const client = await this.prisma.client.findUnique({ 
       where: { userId: id },
