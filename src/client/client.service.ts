@@ -142,4 +142,40 @@ export class ClientService {
 
     return cart
   }
+
+  async getCart(id: string) {
+    const client = await this.prisma.client.findUnique({
+      where: { userId: id },
+      include: {
+        cart: true
+      }
+    })
+    if (!client) {
+      throw new HttpException('User not found', 404);
+    } else if (client.cart.length === 0) {
+      throw new HttpException('No products in cart', 404);
+    }
+
+    return client.cart
+  }
+
+  async removeCart(id: string, cartId: string) {
+    const client = await this.prisma.client.findUnique({ where: { userId: id } })
+    if (!client) {
+      throw new HttpException('Client not found', 404);
+    }
+
+    try {
+      const cart = await this.prisma.cart.delete({
+        where: {
+          cartId
+        }
+      })
+    }
+    catch (error) {
+      throw new HttpException('Cart not found', 404);
+    }
+
+    return 'Product removed from cart'
+  }
 }

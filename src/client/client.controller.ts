@@ -45,13 +45,35 @@ export class ClientController {
   }
 
   @Post(':id/cart')
-  @HttpCode(200)
+  @HttpCode(201)
   addCart(
     @Request() req: AuthRequest,
     @Param('id') productId: string
   ) {
     if (req.user.id) {
       return this.clientService.addCart(req.user.id, productId);
+    } else {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @IsPublic()
+  @Get(':id/cart')
+  @HttpCode(200)
+  getCart(
+    @Param('id') id: string
+  ) {
+    return this.clientService.getCart(id);
+  }
+
+  @Delete(':id/cart')
+  @HttpCode(200)
+  removeCart(
+    @Request() req: AuthRequest,
+    @Param('id') productId: string
+  ) {
+    if (req.user.id) {
+      return this.clientService.removeCart(req.user.id, productId);
     } else {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }

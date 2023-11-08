@@ -112,11 +112,11 @@ WORK IN PROGRESS
   - `/user/:username/cart` (GET) => Get user cart items
     - TODO
   - `/user/:username/cart` (POST) => add item to user cart
-    - TODO
+    - DONE
   - `/user/:username/cart` (DELETE) => Delete item from user cart
     - TODO
   - `/user/:username/favs` (GET) => Get all user fav posts
-    - TODO
+    - DONE
 
 # MARKETPLACE
 
