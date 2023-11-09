@@ -211,4 +211,23 @@ export class UserService {
       password: undefined,
     }
   }
+
+  async findBySearchArg(searchArg: string) {
+    const users = await this.prisma.user.findMany({
+      where: {
+        OR: [
+          { name: { contains: searchArg } },
+          { email: { contains: searchArg } },
+        ],
+      },
+    });
+
+    if (!users) {
+      throw new HttpException('Error finding users', 500);
+    } else if (users.length === 0) {
+      throw new HttpException('No users found', 404);
+    }
+
+    return users
+  }
 }

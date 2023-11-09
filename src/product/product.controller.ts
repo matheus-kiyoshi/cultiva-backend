@@ -59,4 +59,10 @@ export class ProductController {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
   }
+
+  @IsPublic()
+  @Get('search/:arg') 
+  findBySearch(@Param('arg') arg: string) {
+    return this.productService.findBySearch(arg);
+  }
 }

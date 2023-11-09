@@ -124,4 +124,20 @@ export class ProducerService {
       ...deletedProducer
     }
   }
+
+  async getProducts(id: string) {
+    const producer = await this.prisma.producer.findUnique({ where: { userId: id }})
+    if (!producer) {
+      throw new HttpException('Producer not found', 404);
+    }
+
+    const products = await this.prisma.product.findMany({ where: { producerId: id }})
+    if (!products) {
+      throw new HttpException('Error finding products', 500);
+    } else if (products.length === 0) {
+      throw new HttpException('No products found', 404);
+    }
+
+    return products
+  }
 }

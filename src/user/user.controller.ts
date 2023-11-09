@@ -80,4 +80,10 @@ export class UserController {
   ) {
     return this.userService.resetPassword(resetPasswordUserDto);
   }
+
+  @IsPublic()
+  @Get('search/:searchArg')
+  findBySearchArg(@Param('searchArg') searchArg: string) {
+    return this.userService.findBySearchArg(searchArg);
+  }
 }

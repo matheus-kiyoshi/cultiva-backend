@@ -56,4 +56,10 @@ export class ProducerController {
       throw new Error('Unauthorized');
     }
   }
+
+  @IsPublic()
+  @Get(':id/products')
+  getProducts(@Param('id') id: string) {
+    return this.producerService.getProducts(id);
+  }
 }

@@ -148,9 +148,9 @@ WORK IN PROGRESS
 # SEARCH
 
   - `/api/search/users` (GET) => Search users
-    - TODO
+    - DONE
   - `/api/search/products` (GET) => Search products
-    - TODO
+    - DONE
 
 ## TABLES 
 
