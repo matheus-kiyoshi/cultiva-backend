@@ -28,17 +28,6 @@ export class Address implements Prisma.AddressUncheckedCreateInput {
 	userId?: string | null
 }
 
-export class Comment implements Prisma.CommentUncheckedCreateInput {
-	id?: string
-	clientId: string
-	content: string
-	rating: number
-	createdAt?: Date | string
-	updatedAt?: Date | string
-	userId?: string | null
-	productId?: string | null
-}
-
 export class Sale implements Prisma.SaleUncheckedCreateInput {
 	id?: string
 	productId: string
