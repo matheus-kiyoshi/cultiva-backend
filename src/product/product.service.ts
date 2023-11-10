@@ -45,7 +45,12 @@ export class ProductService {
   }
 
   async findAll() {
-    const products = await this.prisma.product.findMany({ orderBy: { createdAt: 'desc' } });
+    const products = await this.prisma.product.findMany({ 
+      orderBy: { createdAt: 'desc' },
+      include: {
+        comments: true
+      }
+    });
     if (!products) {
       throw new HttpException('Error finding products', 500);
     }
@@ -57,12 +62,37 @@ export class ProductService {
   }
 
   async findOne(id: string) {
-    const product = await this.prisma.product.findUnique({ where: { id } });
+    const product = await this.prisma.product.findUnique({ 
+      where: { id },
+      include: {
+        comments: true
+      }
+    });
     if (!product) {
       throw new HttpException('Product not found', 404);
     }
 
     return product;
+  }
+
+  async findAllProductComments(productId: string, skip?: number) {
+    const product = await this.prisma.product.findUnique({ where: { id: productId }});
+    if (!product) {
+      throw new HttpException('Product not found', 404);
+    }
+
+    const comments = await this.prisma.comment.findMany({
+      where: { productId },
+      skip: skip || 0,
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    if (!comments) {
+      throw new HttpException('No comments found', 404);
+    }
+
+    return comments
   }
 
   async update(id: string, producerId: string, updateProductDto: UpdateProductDto) {

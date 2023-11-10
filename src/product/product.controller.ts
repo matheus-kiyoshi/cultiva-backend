@@ -1,4 +1,4 @@
-import { HttpException, HttpCode, HttpStatus, Controller, Request, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { HttpException, HttpCode, HttpStatus, Controller, Request, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -30,6 +30,12 @@ export class ProductController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productService.findOne(id);
+  }
+
+  @IsPublic()
+  @Get(':id/comments?')
+  findAllProductComments(@Param('id') id: string, @Query('skip') skip: number) {
+    return this.productService.findAllProductComments(id, skip);
   }
 
   @Patch(':id')
