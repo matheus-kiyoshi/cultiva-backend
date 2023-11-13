@@ -17,7 +17,7 @@ model Product {
   quantity          Int       @default(0)
   price             Decimal
   rating            Int[]
-  images            Image[]
+  images            String[]
   createdAt         DateTime  @default(now())
   producerId        String
   buys              Buy[]
@@ -42,7 +42,7 @@ model User {
   client    Client?
   comments  Comment[]
   producer  Producer?
-  icon      Image?
+  icon      String?
 }
 
 model Producer {
@@ -127,15 +127,4 @@ model Address {
   state      String
   userId     String? @unique
   user       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Image {
-  id String @id @default(uuid())
-  url String
-
-  product Product? @relation(fields: [productId], references: [id])
-  productId String?
-
-  user   User?       @relation(fields: [userId], references: [id])
-  userId String?     @unique
 }

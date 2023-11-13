@@ -10,6 +10,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { IsFile } from 'nestjs-form-data'
 
 export class CreateUserDto extends User {
 
@@ -34,5 +35,4 @@ export class CreateUserDto extends User {
   @IsOptional()
   @IsObject()
   address: Prisma.AddressUpsertWithoutUserInput;
-
 }
