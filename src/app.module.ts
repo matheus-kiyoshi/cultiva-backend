@@ -9,9 +9,10 @@ import { ProducerModule } from './producer/producer.module';
 import { ClientModule } from './client/client.module';
 import { CommentModule } from './comment/comment.module';
 import { FirebaseModule } from './modules/firebase/firebase.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, ProductModule, ProducerModule, ClientModule, CommentModule, FirebaseModule],
+  imports: [PrismaModule, UserModule, AuthModule, ProductModule, ProducerModule, ClientModule, CommentModule, FirebaseModule, OrderModule],
   controllers: [],
   providers: [
     {
