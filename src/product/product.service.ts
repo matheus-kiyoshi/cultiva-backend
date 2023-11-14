@@ -13,6 +13,18 @@ export class ProductService {
     if (!producer) {
       throw new HttpException("User not found", 404)
     }
+  
+    const today = new Date();
+    const exp = new Date(createProductDto.expirationDate);
+    const man = new Date(createProductDto.manufacturingDate);
+
+    if (today > exp) {
+      throw new HttpException('Expiration date must be greater than today', 400);
+    } else if (today < man) {
+      throw new HttpException('Manufacturing date must be less than today', 400);
+    } else if (exp < man) {
+      throw new HttpException('Expiration date must be greater than manufacturing date', 400);
+    }
 
     const data: Prisma.ProductCreateInput = {
       ...createProductDto,
