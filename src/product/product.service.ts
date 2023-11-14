@@ -39,10 +39,20 @@ export class ProductService {
             userId: id
           }
         }
+      },
+      category: {
+        connectOrCreate: {
+          create: {
+            name: createProductDto.category
+          },
+          where: {
+            name: createProductDto.category
+          }
+        }
       }
     }
 
-    const createdProduct = await this.prisma.product.create({ data, include: { producer: true } });
+    const createdProduct = await this.prisma.product.create({ data, include: { producer: true, category: true } });
     if (!createdProduct) {
       throw new HttpException('Error creating product', 500);
     }
@@ -60,7 +70,8 @@ export class ProductService {
     const products = await this.prisma.product.findMany({ 
       orderBy: { createdAt: 'desc' },
       include: {
-        comments: true
+        comments: true,
+        category: true
       }
     });
     if (!products) {
@@ -77,7 +88,8 @@ export class ProductService {
     const product = await this.prisma.product.findUnique({ 
       where: { id },
       include: {
-        comments: true
+        comments: true,
+        category: true
       }
     });
     if (!product) {
@@ -117,11 +129,40 @@ export class ProductService {
       throw new HttpException('Unauthorized', 401);
     }
 
+    const category = await this.prisma.category.findUnique({ where: { id: product.categoryId } })
+    if (!category) {
+      throw new HttpException('Category not found', 404);
+    }
+
+    let data: Prisma.ProductUpdateInput | undefined;
+    if (updateProductDto.category) {
+      data = {
+        ...updateProductDto,
+        category: {
+          connectOrCreate: {
+            create: {
+              name: updateProductDto.category
+            },
+            where: {
+              name: updateProductDto.category
+            }
+          }
+        }
+      }
+    } else {
+      data = {
+        ...updateProductDto,
+        category: {
+          connect: {
+            id: product.categoryId
+          }
+        }
+      }
+    }
+
     const updatedProduct = await this.prisma.product.update({
       where: { id },
-      data: {
-        ...updateProductDto
-      }
+      data
     })
 
     if (!updatedProduct) {
@@ -212,6 +253,9 @@ export class ProductService {
             }
           }
         ]
+      },
+      include: {
+        category: true
       }
     });
 

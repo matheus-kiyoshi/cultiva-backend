@@ -39,7 +39,7 @@ export class CreateProductDto extends Product {
 	})
 	@IsDateString()
 	expirationDate: Date;
-
+	
 	@ApiProperty({
 		description: 'Product price',
 		example: 10.00,
@@ -48,7 +48,7 @@ export class CreateProductDto extends Product {
 	})
 	@IsNumber()
 	price: string | number | Decimal | DecimalJsLike;
-
+	
 	@ApiProperty({
 		description: 'Product quantity',
 		example: 10,
@@ -68,4 +68,13 @@ export class CreateProductDto extends Product {
 	@IsOptional()
 	@IsBoolean()
 	soldOut?: boolean | undefined;
+
+	@ApiProperty({
+		description: 'Product category',
+		example: 'fruits',
+		required: true,
+		type: 'string'
+	})
+	@IsString()
+	category: string
 }

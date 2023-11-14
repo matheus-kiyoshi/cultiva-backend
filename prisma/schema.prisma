@@ -26,6 +26,8 @@ model Product {
   sales             Sale[]
   cart              Cart[]
   favorites         Client[]
+  category          Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId        String
 }
 
 model User {
@@ -60,15 +62,21 @@ model Client {
   user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   commentsOnProducts Comment[]
   cart               Cart[]
-  favorites          Product[] 
+  favorites          Product[]
+}
+
+model Category {
+  id      String    @id @default(uuid())
+  name    String    @unique
+  product Product[]
 }
 
 model Cart {
-  cartId String @id @default(uuid())
-  clientId String 
+  cartId    String  @id @default(uuid())
+  clientId  String
   productId String
-  client Client @relation(fields: [clientId], references: [userId], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  client    Client  @relation(fields: [clientId], references: [userId], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Order {

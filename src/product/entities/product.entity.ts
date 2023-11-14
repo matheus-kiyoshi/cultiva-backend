@@ -13,6 +13,7 @@ export class Product implements Prisma.ProductUncheckedCreateInput {
 	rating?: Prisma.ProductCreateratingInput | number[]
 	createdAt?: Date | string
 	producerId: string
+	categoryId: string
 	buys?: Prisma.BuyUncheckedCreateNestedManyWithoutProductInput
 	sales?: Prisma.SaleUncheckedCreateNestedManyWithoutProductInput
 	comments?: Prisma.CommentUncheckedCreateNestedManyWithoutProductInput
