@@ -12,6 +12,7 @@ export class User implements Prisma.UserUncheckedCreateInput {
 	addressId?: string | null
 	rating?: Prisma.UserCreateratingInput | number[]
 	createdAt?: Date | string
+	address?: Prisma.AddressUncheckedCreateNestedOneWithoutUserInput
 	producer?: Prisma.ProducerUncheckedCreateNestedOneWithoutUserInput
 	client?: Prisma.ClientUncheckedCreateNestedOneWithoutUserInput
 	comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput

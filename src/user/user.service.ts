@@ -82,6 +82,11 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {    
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: {
@@ -103,6 +108,11 @@ export class UserService {
   }
 
   async remove(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
     const deletedUser = await this.prisma.user.delete({ where: { id } });
     if (!deletedUser) {
       throw new HttpException('Error deleting user', 500);

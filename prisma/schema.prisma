@@ -22,7 +22,7 @@ model Product {
   producerId        String
   buys              Buy[]
   comments          Comment[]
-  producer          Producer  @relation(fields: [producerId], references: [userId])
+  producer          Producer  @relation(fields: [producerId], references: [userId], onDelete: Cascade)
   sales             Sale[]
   cart              Cart[]
   favorites         Client[]
@@ -49,7 +49,7 @@ model Producer {
   userId   String    @id
   cpf      String?   @unique
   cnpj     String?   @unique
-  user     User      @relation(fields: [userId], references: [id])
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   products Product[]
   sales    Sale[]
 }
@@ -57,7 +57,7 @@ model Producer {
 model Client {
   userId             String    @id
   purchases          Buy[]
-  user               User      @relation(fields: [userId], references: [id])
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   commentsOnProducts Comment[]
   cart               Cart[]
   favorites          Product[] 
@@ -67,8 +67,8 @@ model Cart {
   cartId String @id @default(uuid())
   clientId String 
   productId String
-  client Client @relation(fields: [clientId], references: [userId])
-  product Product @relation(fields: [productId], references: [id])
+  client Client @relation(fields: [clientId], references: [userId], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Order {
@@ -86,9 +86,9 @@ model Buy {
   clientId  String
   orderId   String
   quantity  Int
-  client    Client  @relation(fields: [clientId], references: [userId])
-  order     Order   @relation(fields: [orderId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  client    Client  @relation(fields: [clientId], references: [userId], onDelete: NoAction)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: NoAction)
+  product   Product @relation(fields: [productId], references: [id], onDelete: NoAction)
 }
 
 model Sale {
@@ -97,9 +97,9 @@ model Sale {
   producerId String
   orderId    String
   quantity   Int
-  order      Order    @relation(fields: [orderId], references: [id])
-  producer   Producer @relation(fields: [producerId], references: [userId])
-  product    Product  @relation(fields: [productId], references: [id])
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: NoAction)
+  producer   Producer @relation(fields: [producerId], references: [userId], onDelete: NoAction)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: NoAction)
 }
 
 model Comment {
@@ -111,9 +111,9 @@ model Comment {
   updatedAt DateTime @updatedAt
   userId    String?
   productId String?
-  client    Client   @relation(fields: [clientId], references: [userId])
-  product   Product? @relation(fields: [productId], references: [id])
-  user      User?    @relation(fields: [userId], references: [id])
+  client    Client   @relation(fields: [clientId], references: [userId], onDelete: NoAction)
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: NoAction)
 }
 
 model Address {
