@@ -1,6 +1,6 @@
 import * as nodemailer from 'nodemailer';
 
-export async function sendEmail(userEmail: string, subject: string, text: string, html: string) {
+export function sendEmail(userEmail: string, subject: string, text: string, html: string) {
 	const transporter = nodemailer.createTransport({
 		service: 'Outlook',
 		auth: {
