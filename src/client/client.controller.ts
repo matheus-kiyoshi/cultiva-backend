@@ -1,4 +1,4 @@
-import { Request, Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, HttpCode } from '@nestjs/common';
+import { Request, Controller, Get, Post, Param, Delete, HttpException, HttpStatus, HttpCode } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { AuthRequest } from 'src/auth/models/AuthRequest';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';

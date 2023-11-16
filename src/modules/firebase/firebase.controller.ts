@@ -1,7 +1,7 @@
 import { Controller, Post, UseInterceptors, Request, UploadedFiles, HttpCode, Response, HttpException, Param } from '@nestjs/common';
 import { FirebaseService } from './firebase.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from 'express';
+import { Request as ExpressRequest } from 'express';
 import { uploadImages } from './middlewares/firebase-upload.middleware';
 import { AuthRequest } from 'src/auth/models/AuthRequest';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
