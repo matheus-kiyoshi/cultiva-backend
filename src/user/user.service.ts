@@ -9,7 +9,29 @@ import { Prisma } from '@prisma/client';
 import { UpdateUserPasswordDto } from './dto/update-user-password';
 import { ResetPasswordUserDto } from './dto/reset-password-user.dto';
 import * as nodemailer from 'nodemailer';
-import { prismaExclude } from 'src/utils/exclude/exclude-entity-attribute.util';
+
+type A<T extends string> = T extends `${infer U}ScalarFieldEnum` ? U : never;
+type Entity = A<keyof typeof Prisma>;
+type Keys<T extends Entity> = Extract<
+  keyof (typeof Prisma)[keyof Pick<typeof Prisma, `${T}ScalarFieldEnum`>],
+  string
+>;
+
+export function prismaExclude<T extends Entity, K extends Keys<T>>(
+  type: T,
+  omit: K[],
+) {
+  type Key = Exclude<Keys<T>, K>;
+  type TMap = Record<Key, true>;
+  const result: TMap = {} as TMap;
+  for (const key in Prisma[`${type}ScalarFieldEnum`]) {
+    if (!omit.includes(key as K)) {
+      result[key as Key] = true;
+    }
+  }
+  return result;
+}
+
 
 export async function sendEmail(userEmail: string, subject: string, text: string, html: string) {
 	const transporter = nodemailer.createTransport({
