@@ -20,6 +20,7 @@ export class AuthService {
       email: user.email,
       name: user.name,
       telephone: user.telephone,
+      icon: user.icon,
     };
 
     return {
