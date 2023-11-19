@@ -284,6 +284,7 @@ export class UserService {
         ]
       },
       include: {
+        buy: true,
         sale: true,
       }
     })
@@ -292,7 +293,11 @@ export class UserService {
       throw new HttpException('Error finding orders', 500);
     }
 
-    const productsId = orders.map((order) => order.sale.map((sale) => sale.productId))
+    const saleProductsId = orders.map((order) => order.sale.map((sale) => sale.productId))
+
+    const buyProductsId = orders.map((order) => order.buy.map((buy) => buy.productId))
+
+    const productsId = [...saleProductsId, ...buyProductsId]
 
     const products = await this.prisma.product.findMany({
       where: {
@@ -306,9 +311,49 @@ export class UserService {
       throw new HttpException('Error finding products', 500);
     }
 
-    return {
-      products
+    return products
+  }
+
+  async getUserBuys(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
     }
+
+    const buys = await this.prisma.buy.findMany({
+      where: {
+        clientId: user.id
+      },
+      include: {
+        product: true
+      }
+    })
+    if (!buys) {
+      throw new HttpException('Error finding buys', 500);
+    }
+
+    return buys
+  }
+
+  async getUserSales(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const sales = await this.prisma.sale.findMany({
+      where: {
+        producerId: user.id
+      },
+      include: {
+        product: true
+      }
+    })
+    if (!sales) {
+      throw new HttpException('Error finding sales', 500);
+    }
+
+    return sales
   }
 
   async findBySearchArg(searchArg: string) {
