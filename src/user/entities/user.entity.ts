@@ -15,4 +15,5 @@ export class User implements Prisma.UserUncheckedCreateInput {
 	producer?: Prisma.ProducerUncheckedCreateNestedOneWithoutUserInput
 	client?: Prisma.ClientUncheckedCreateNestedOneWithoutUserInput
 	comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+	accessToken?: string;
 }

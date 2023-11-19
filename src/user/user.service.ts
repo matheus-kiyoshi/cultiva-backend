@@ -270,6 +270,47 @@ export class UserService {
     }
   }
 
+  async getUserOrders(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const orders = await this.prisma.order.findMany({
+      where: {
+        OR: [
+          { buy: { some: { clientId: user.id } } },
+          { sale: { some: { producerId: user.id } } },
+        ]
+      },
+      include: {
+        sale: true,
+      }
+    })
+
+    if (!orders) {
+      throw new HttpException('Error finding orders', 500);
+    }
+
+    const productsId = orders.map((order) => order.sale.map((sale) => sale.productId))
+
+    const products = await this.prisma.product.findMany({
+      where: {
+        id: {
+          in: productsId.flat(),
+        }
+      }
+    })
+
+    if (!products) {
+      throw new HttpException('Error finding products', 500);
+    }
+
+    return {
+      products
+    }
+  }
+
   async findBySearchArg(searchArg: string) {
     const users = await this.prisma.user.findMany({
       where: {

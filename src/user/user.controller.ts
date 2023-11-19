@@ -95,6 +95,16 @@ export class UserController {
   }
 
   @IsPublic()
+  @Get(':id/orders')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get user orders' })
+  getUserOrders(
+    @Param('id') id: string
+  ) {
+    return this.userService.getUserOrders(id);
+  }
+
+  @IsPublic()
   @Get('search/:searchArg')
   @ApiOperation({ summary: 'Search users by name or email' })
   findBySearchArg(@Param('searchArg') searchArg: string) {
