@@ -356,6 +356,24 @@ export class UserService {
     return sales
   }
 
+  async getUserProducts(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    const products = await this.prisma.product.findMany({
+      where: {
+        producerId: user.id
+      }
+    })
+    if (!products) {
+      throw new HttpException('Error finding products', 500);
+    }
+
+    return products
+  }
+
   async findBySearchArg(searchArg: string) {
     const users = await this.prisma.user.findMany({
       where: {

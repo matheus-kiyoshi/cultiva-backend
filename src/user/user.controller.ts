@@ -107,7 +107,7 @@ export class UserController {
   @IsPublic()
   @Get(':id/buys')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Get user orders' })
+  @ApiOperation({ summary: 'Get user buys' })
   getUserBuys(
     @Param('id') id: string
   ) {
@@ -117,11 +117,21 @@ export class UserController {
   @IsPublic()
   @Get(':id/sales')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Get user orders' })
+  @ApiOperation({ summary: 'Get user sales' })
   getUserSales(
     @Param('id') id: string
   ) {
     return this.userService.getUserSales(id);
+  }
+
+  @IsPublic()
+  @Get(':id/products')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get user products' })
+  getUserProducts(
+    @Param('id') id: string
+  ) {
+    return this.userService.getUserProducts(id);
   }
 
   @IsPublic()
