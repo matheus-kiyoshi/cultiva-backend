@@ -129,6 +129,15 @@ export class UserService {
     return user;
   }
 
+  async getUserAddress(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id }, include: { address: true } });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return user.address;
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {    
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) {

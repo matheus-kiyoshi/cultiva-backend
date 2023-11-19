@@ -15,10 +15,16 @@ export class AuthService {
   ) {}
 
   async login(user: User): Promise<UserToken> {
+    let add
+    if (user.id) {
+      add = await this.userService.getUserAddress(user.id);
+    }
+
     const payload: UserPayload = {
       sub: user.id ? user.id : '',
       email: user.email,
       name: user.name,
+      address: add,
       telephone: user.telephone,
       icon: user.icon,
     };
