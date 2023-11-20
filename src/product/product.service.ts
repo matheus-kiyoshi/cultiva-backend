@@ -70,7 +70,11 @@ export class ProductService {
     const products = await this.prisma.product.findMany({ 
       orderBy: { createdAt: 'desc' },
       include: {
-        comments: true,
+        comments: {
+          include: {
+            user: true
+          }
+        },
         category: true
       }
     });
@@ -110,6 +114,9 @@ export class ProductService {
       skip: skip || 0,
       orderBy: {
         createdAt: 'desc'
+      },
+      include: {
+        user: true
       }
     });
     if (!comments) {
