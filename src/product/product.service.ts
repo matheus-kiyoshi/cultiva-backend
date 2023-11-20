@@ -72,10 +72,19 @@ export class ProductService {
       include: {
         comments: {
           include: {
-            user: true
+            user: {
+              include: {
+                producer: {
+                  include: {
+                    sales: true
+                  }
+                }
+              }
+            }
           }
         },
-        category: true
+        category: true,
+        buys: true
       }
     });
     if (!products) {
