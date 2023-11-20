@@ -80,6 +80,13 @@ export class ProductController {
   }
 
   @IsPublic()
+  @Get(':id/buys')
+  @ApiOperation({ summary: 'Get buys of product' })
+  getBuys(@Param('id') id: string) {
+    return this.productService.getBuys(id);
+  }
+
+  @IsPublic()
   @Get('search/:arg') 
   @ApiOperation({ summary: 'Find products by search' })
   findBySearch(@Param('arg') arg: string) {

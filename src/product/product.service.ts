@@ -254,6 +254,22 @@ export class ProductService {
     }
   }
 
+  async getBuys(productId: string) {
+    const product = await this.prisma.product.findUnique({ where: { id: productId }});
+    if (!product) {
+      throw new HttpException('Product not found', 404);
+    }
+
+    const buys = await this.prisma.buy.findMany({
+      where: { productId },
+    })
+    if (!buys) {
+      throw new HttpException('No buys found', 404);
+    }
+
+    return buys
+  }
+
   async findBySearch(search: string) {
     const products = await this.prisma.product.findMany({
       where: {
